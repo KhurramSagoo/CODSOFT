@@ -7,10 +7,12 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 const App = () => {
+  const toast = useToast();
   const schema = yup.object().shape({
     userName: yup.string().required(),
     email: yup.string().required().email(),
@@ -30,6 +32,22 @@ const App = () => {
   const onSubmit = (data) => {
     console.log(data);
   };
+
+  //to use toast as a error notification
+  // useEffect(() => {
+  //   if (errors.userName) {
+  //     toast({
+  //       title: "Fill the user name.",
+  //       description: errors.userName.message,
+  //       status: "error",
+  //       isClosable: true,
+  //       position: "top",
+  //       duration: 3000,
+  //     });
+
+  //   } else {
+  //   }
+  // }, [errors]);
 
   return (
     <Center py={5}>
