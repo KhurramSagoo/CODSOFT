@@ -1,5 +1,4 @@
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import React from "react";
 import {
   Box,
   Button,
@@ -11,17 +10,26 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebaseconfig/firebase";
+import { useNavigate } from "react-router-dom";
+// import LOGIN from "../utils/Routes";
+
 const Register = () => {
+  // const auth = getAuth(
   const toast = useToast();
+  const navigate = useNavigate();
+
   const schema = yup.object().shape({
     userName: yup.string().required(),
     email: yup.string().required().email(),
     password: yup.string().min(6).required(),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref("password"), null], "Password Don't Match")
+      .oneOf([yup.ref("password"), null], "Passwords must match")
       .required(),
   });
 
@@ -31,44 +39,44 @@ const Register = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onSubmit = (data) => {
-    // console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const { email, password } = data;
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      // Do something with the user, if needed
+      console.log("User created:", user);
+      navigate("/");
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+      toast({
+        title: "Error",
+        description: errorMessage,
+        status: "error",
+        isClosable: true,
+        position: "top",
+        duration: 3000,
+      });
+    }
   };
-
-  //to use toast as a error notification
-  // useEffect(() => {
-  //   if (errors.userName) {
-  //     toast({
-  //       title: "Fill the user name.",
-  //       description: errors.userName.message,
-  //       status: "error",
-  //       isClosable: true,
-  //       position: "top",
-  //       duration: 3000,
-  //     });
-
-  //   } else {
-  //   }
-  // }, [errors]);
 
   return (
     <Center w="100%" h="100vh" bg="#2D3748">
-      <Box
-        bg="#CBD5E0"
-        maxW="md"
-        w="100%"
-        padding="30px"
-        margin="25px"
-        // h="100vh"
-      >
+      <Box bg="#CBD5E0" maxW="md" w="100%" padding="30px" margin="25px">
         <Text fontSize="2rem" fontWeight="700" textAlign="center">
           Sign Up
         </Text>
         <Text fontSize="1.2rem" textAlign="center" fontWeight="500">
-          Fill the form to get register.
+          Fill the form to get registered.
         </Text>
-        <form action="" onSubmit={handleSubmit(onSubmit)} type="submit">
-          {/* <FormControl my={5} isInvalid={errors.userName ? true : false}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl my={5} isInvalid={errors.userName ? true : false}>
             <FormLabel>User Name:</FormLabel>
             <Input
               type="text"
@@ -78,10 +86,9 @@ const Register = () => {
             <FormErrorMessage>
               {errors.userName && errors.userName.message}
             </FormErrorMessage>
-          </FormControl> */}
+          </FormControl>
           <FormControl my={5} isInvalid={errors.email ? true : false}>
             <FormLabel>Email:</FormLabel>
-
             <Input
               type="email"
               placeholder="user@email.com"
@@ -91,7 +98,6 @@ const Register = () => {
           </FormControl>
           <FormControl my={5} isInvalid={errors.password ? true : false}>
             <FormLabel>Password:</FormLabel>
-
             <Input
               type="password"
               placeholder="Password123"
@@ -101,34 +107,24 @@ const Register = () => {
           </FormControl>
           <FormControl my={5} isInvalid={errors.confirmPassword ? true : false}>
             <FormLabel>Confirm Password:</FormLabel>
-
             <Input
               type="password"
               placeholder="Confirm Password..."
               {...register("confirmPassword")}
             />
-            <FormErrorMessage
-            // style={{
-            //   maxWidth: "250px",
-            //   height: "auto",
-            // }}
-            >
+            <FormErrorMessage>
               {errors.confirmPassword?.message}
             </FormErrorMessage>
           </FormControl>
-          {/* <Input type="submit" /> */}
           <Button
             bg="#2D3748"
             color="white"
-            _hover={{
-              background: "#F7FAFC",
-              color: "black",
-            }}
-            // _hover="#1A202C"
+            _hover={{ background: "#F7FAFC", color: "black" }}
             type="submit"
             w="full"
+            onClick={onSubmit}
           >
-            Login
+            Sign Up
           </Button>
         </form>
       </Box>
