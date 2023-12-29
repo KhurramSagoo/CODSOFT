@@ -1,8 +1,7 @@
 import { Heading, Button, Center, Box, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebaseconfig/firebase";
-import { LOGIN } from "./utils/Routes";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 
