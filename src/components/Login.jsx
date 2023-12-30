@@ -76,10 +76,6 @@ const Login = () => {
     }
   };
 
-  const handleRegister = () => {
-    navigate("/register");
-  };
-
   return (
     <Center w="100%" h="100vh" bg="#1A202C">
       <Box bg="#CBD5E0" maxW="md" w="100%" padding="30px" margin="25px">
@@ -122,22 +118,13 @@ const Login = () => {
           </Button>
           <br />
           <br />
-
-          <Button
-            bg="#2D3748"
-            color="white"
-            _hover={{
-              background: "#F7FAFC",
-              color: "black",
-            }}
-            w="full"
-            onClick={handleRegister}
-          >
-            Sign up
-          </Button>
-          {/* <br /> */}
-          {/* <br /> */}
-          {/* <Link to={navigate("/register")}>Register</Link> */}
+          <Text color={"black"} fontStyle={"italic"}>
+            If you are new then click
+            <Link fontWeight={"900"} onClick={() => navigate("/register")}>
+              {" "}
+              {""}Sign Up
+            </Link>{" "}
+          </Text>
         </form>
       </Box>
     </Center>

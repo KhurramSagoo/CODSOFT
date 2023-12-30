@@ -7,6 +7,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Link,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -126,6 +127,15 @@ const Register = () => {
           >
             Sign Up
           </Button>
+          <br />
+          <br />
+          <Text color={"black"} fontStyle={"italic"}>
+            If you have already signed up then click
+            <Link fontWeight={"900"} onClick={() => navigate("/login")}>
+              {" "}
+              {""}Login
+            </Link>{" "}
+          </Text>
         </form>
       </Box>
     </Center>
